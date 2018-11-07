@@ -78,6 +78,14 @@ app.use((req, res, next) => {
     next()
 })
 
+// router.get('/', function(req, res){
+// 	res.render('index');
+// });
+
+app.get('*', function (req, res) {
+    res.render('index');
+  });
+
 app.use('/nodative/api/v1/', routes)
 
 app.use('/nodative/api/v1/', (req, res, next) => {
