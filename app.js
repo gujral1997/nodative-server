@@ -1,24 +1,24 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var exphbs = require('express-handlebars');
-var expressValidator = require('express-validator');
-var flash = require('connect-flash');
-var session = require('express-session');
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var mongo = require('mongodb');
-var mongoose = require('mongoose');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const exphbs = require('express-handlebars');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const mongo = require('mongodb');
+const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative');
-var db = mongoose.connection;
+const db = mongoose.connection;
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+const routes = require('./routes/index');
+const users = require('./routes/users');
 
 // Init App
-var app = express();
+const app = express();
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -47,7 +47,7 @@ app.use(passport.session());
 // Express Validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
+      const namespace = param.split('.')
       , root    = namespace.shift()
       , formParam = root;
 
