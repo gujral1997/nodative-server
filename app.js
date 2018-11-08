@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative');
 
 const routes = require('./routes/index');
-const users = require('./routes/users');
+// const users = require('./routes/users');
 
 // Init App
 const app = express();
@@ -73,13 +73,13 @@ app.use(function (req, res, next) {
 
 
 
-app.use('/kinkyu/api/v1/', routes);
+app.use('/nodative/api/v1/', routes)
 
-app.use('/kinkyu/api/v1/', function (req, res, next) {
-  res.status(404).json({
-    info: `Cannot ${req.method}: '${req.path}`,
-  });
-});
+app.use('/nodative/api/v1/', (req, res, next) => {
+    res.status(404).json({
+      info: `Cannot ${req.method}: '${req.path}`,
+    })
+})
 
 // Set Port
 app.set('port', (process.env.PORT || 3000));
