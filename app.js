@@ -1,23 +1,24 @@
-import express from 'express'
-import path from 'path'
-import cookieParser from 'cookie-parser'
-import bodyParser from 'body-parser'
-import exphbs from 'express-handlebars'
-import expressValidator from 'express-validator'
-import flash from 'connect-flash'
-import session from 'express-session'
-import passport from 'passport'
-import localStratergy from 'passport-local'
-import mongo from 'mongodb'
-import mongoose from 'mongoose'
-import { param } from 'express-validator/check';
-
-import routes from './routes/index'
-import users from './routes/users'
-
-const app = express()
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var exphbs = require('express-handlebars');
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative');
+var db = mongoose.connection;
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
+
+// Init App
+var app = express();
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
