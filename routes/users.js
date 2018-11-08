@@ -29,7 +29,10 @@ const registerUser =(req, res) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		res.status(500).json(errors)
+        // res.status(500).json(errors)
+        res.render('register', {
+			errors: errors
+		})
     }
 
     else {
@@ -60,10 +63,11 @@ const registerUser =(req, res) => {
                     })
             
                     req.flash('success_msg', 'You are registered and can now login')
+                    res.redirect('/users/login');
             
-                    res.status(200).json({
-                        msg: `${name} has successfully registered`
-                    })
+                    // res.status(200).json({
+                    //     msg: `${name} has successfully registered`
+                    // })
                 }
 			});
 		});
@@ -72,18 +76,21 @@ const registerUser =(req, res) => {
 
 // Function that logs in User
 const loginUser = (req, res) => {
-    console.log('h')
-    res.status(200).json({
-        msg: `${req.body.username} has successfully logged in`
-    })
+    res.redirect('/');    
+    // res.status(200).json({
+    //     msg: `${req.body.username} has successfully logged in`
+    // })
   }
 
 // Function that logouts user
 const logoutUser = (req, res) => {
-    req.logout()
-    res.status(200).json({
-        msg: `Logged out successfully`
-    })
+    // req.logout()
+    req.logout();
+        // res.status(200).json({
+        //     msg: `Logged out successfully`
+        // })
+    req.flash('success_msg', 'You are logged out')
+    res.redirect('/users/login')
 }
 
 // Register
@@ -131,10 +138,9 @@ passport.deserializeUser((id, done) => {
 })
 
 // Login User
-router.post('/login', passport.authenticate('local'), loginUser);
+router.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }), loginUser)
 
 // Logout User
 router.get('/logout', logoutUser)
 
-
-export default router
+module.exports = router

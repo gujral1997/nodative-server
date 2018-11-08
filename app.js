@@ -1,9 +1,9 @@
 import express from 'express'
 import path from 'path'
-import cookiesParser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import bodyParser from 'body-parser'
 import exphbs from 'express-handlebars'
-import expressValidotor from 'express-validator'
+import expressValidator from 'express-validator'
 import flash from 'connect-flash'
 import session from 'express-session'
 import passport from 'passport'
@@ -13,88 +13,74 @@ import mongoose from 'mongoose'
 import { param } from 'express-validator/check';
 
 import routes from './routes/index'
+import users from './routes/users'
 
-// Mongodb databse connection
-mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative')
-mongoose.connection
-.once('open', () => console.log('Connected to MongoLab instance.'))
-.on('error', error => console.log('Error connecting to MongoLab:', error));
-
-
-
-// Init App
 const app = express()
 
+mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative');
+
 // View Engine
-app.set('views', path.join(__dirname, 'views'))
-app.engine('handlebars', exphbs({defaultLayout: 'layout'}))
-app.set('view engine', 'handlebars')
+app.set('views', path.join(__dirname, 'views'));
+app.engine('handlebars', exphbs({defaultLayout:'layout'}));
+app.set('view engine', 'handlebars');
 
 // BodyParser Middleware
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookiesParser())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // Set Static Folder
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware Express Session
+// Express Session
 app.use(session({
     secret: 'secret',
     saveUninitialized: true,
     resave: true
-}))
+}));
 
 // Passport init
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Express Validator (from express validator github)
-app.use(expressValidotor({
-    errorFormatter: (param, msg, value)=> {
-        let namespace = param.split('.'),
-        root = namespace.shift(),
-        formParam = root
-        while(namespace.length) {
-            formParam += '[' +namespace.shift() + ']'
-        }
-        return {
-            param: formParam,
-            msg: msg,
-            value: value
-        }
+// Express Validator
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
     }
-}))
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 
-// Connect flash Middleware
-app.use(flash())
+// Connect Flash
+app.use(flash());
 
 // Global Vars
-app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg')
-    res.locals.error_msg = req.flash('error_msg')
-    res.locals.error = req.flash('error')
-    res.locals.user = req.user || null
-    next()
-})
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
+});
 
-// router.get('/', function(req, res){
-// 	res.render('index');
-// });
 
-app.get('*', function (req, res) {
-    res.render('index');
-  });
 
-app.use('/', routes)
-
-// app.use('/', (req, res, next) => {
-//     res.status(404).json({
-//       info: `Cannot ${req.method}: '${req.path}`,
-//     })
-//   })
+app.use('/', routes);
+app.use('/users', users);
 
 // Set Port
-app.set('port', (process.env.PORT || 3000))
+app.set('port', (process.env.PORT || 3000));
 
-app.listen(app.get('port'), ()=>console.log(`App is listening at ${app.get('port')}`))
+app.listen(app.get('port'), function(){
+	console.log('Server started on port '+app.get('port'));
+});

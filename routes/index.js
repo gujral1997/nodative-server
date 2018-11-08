@@ -1,13 +1,18 @@
-import express from 'express'
-const router = express.Router()
+var express = require('express');
+var router = express.Router();
 
-import userRoutes from './users'
-
-router.get('/', function(req, res){
+// Get Homepage
+router.get('/', ensureAuthenticated, function(req, res){
 	res.render('index');
 });
 
-// Get Homepage
-router.use('/users', userRoutes)
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('error_msg','You are not logged in');
+		res.redirect('/users/login');
+	}
+}
 
-export default router
+module.exports = router;
