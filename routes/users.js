@@ -5,15 +5,15 @@ const LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
 
-// Register
-router.get('/register', function (req, res) {
-	res.render('register');
-});
+// // Register
+// router.get('/register', function (req, res) {
+// 	res.render('register');
+// });
 
-// Login
-router.get('/login', function (req, res) {
-	res.render('login');
-});
+// // Login
+// router.get('/login', function (req, res) {
+// 	res.render('login');
+// });
 
 // Register User
 router.post('/register', function (req, res) {
@@ -34,9 +34,7 @@ router.post('/register', function (req, res) {
 	const errors = req.validationErrors();
 
 	if (errors) {
-		res.render('register', {
-			errors: errors
-		});
+		res.status(500).json(errors)
 	}
 	else {
 		//checking for email and username are already taken
@@ -47,10 +45,10 @@ router.post('/register', function (req, res) {
 				"$regex": "^" + email + "\\b", "$options": "i"
 		}}, function (err, mail) {
 				if (user || mail) {
-					res.render('register', {
+					res.json({
 						user: user,
 						mail: mail
-					});
+					})
 				}
 				else {
 					var newUser = new User({
@@ -63,8 +61,9 @@ router.post('/register', function (req, res) {
 						if (err) throw err;
 						console.log(user);
 					});
-         	req.flash('success_msg', 'You are registered and can now login');
-					res.redirect('/users/login');
+                    res.status(200).json({
+                        msg: `${name} has successfully registered`
+                    })
 				}
 			});
 		});
@@ -101,17 +100,18 @@ passport.deserializeUser(function (id, done) {
 });
 
 router.post('/login',
-	passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }),
+	passport.authenticate('local'),
 	function (req, res) {
-		res.redirect('/');
+		res.status(200).json({
+            msg: `${req.body.username} has successfully logged in`
+        })
 	});
 
 router.get('/logout', function (req, res) {
 	req.logout();
-
-	req.flash('success_msg', 'You are logged out');
-
-	res.redirect('/users/login');
+    res.status(200).json({
+        msg: `Logged out successfully`
+    })
 });
 
 module.exports = router;
