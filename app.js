@@ -1,23 +1,21 @@
-import express from 'express'
-import path from 'path'
-import cookieParser from 'cookie-parser'
-import bodyParser from 'body-parser'
-import exphbs from 'express-handlebars'
-import expressValidator from 'express-validator'
-import flash from 'connect-flash'
-import session from 'express-session'
-import passport from 'passport'
-import localStratergy from 'passport-local'
-import mongo from 'mongodb'
-import mongoose from 'mongoose'
-import { param } from 'express-validator/check';
-
-import routes from './routes/index'
-import users from './routes/users'
-
-const app = express()
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const exphbs = require('express-handlebars');
+const expressValidator = require('express-validator');
+const flash = require('connect-flash');
+const session = require('express-session');
+const passport = require('passport');
+const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative');
+
+const routes = require('./routes/index');
+const users = require('./routes/users');
+
+// Init App
+const app = express();
 
 // View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -46,7 +44,7 @@ app.use(passport.session());
 // Express Validator
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
+      const namespace = param.split('.')
       , root    = namespace.shift()
       , formParam = root;
 

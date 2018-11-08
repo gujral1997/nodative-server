@@ -1,17 +1,22 @@
-import express from 'express'
-import User, {
-    createUser,
-    getUserByUsername,
-    comparePassword,
-    getUserById
-} from '../models/user'
-import passport from 'passport'
-import {Strategy as LocalStrategy} from 'passport-local'
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-const router = express.Router()
+var User = require('../models/user');
 
-// Function that registers user
-const registerUser =(req, res) => {
+// Register
+router.get('/register', function (req, res) {
+	res.render('register');
+});
+
+// Login
+router.get('/login', function (req, res) {
+	res.render('login');
+});
+
+// Register User
+router.post('/register', function (req, res) {
 	const name = req.body.name;
 	const email = req.body.email;
 	const username = req.body.username;
@@ -29,20 +34,18 @@ const registerUser =(req, res) => {
 	const errors = req.validationErrors();
 
 	if (errors) {
-        // res.status(500).json(errors)
-        res.render('register', {
+		res.render('register', {
 			errors: errors
-		})
-    }
-
-    else {
+		});
+	}
+	else {
 		//checking for email and username are already taken
 		User.findOne({ username: { 
 			"$regex": "^" + username + "\\b", "$options": "i"
-	}}, (err, user) => {
+	}}, function (err, user) {
 			User.findOne({ email: { 
 				"$regex": "^" + email + "\\b", "$options": "i"
-		}},  (err, mail) => {
+		}}, function (err, mail) {
 				if (user || mail) {
 					res.render('register', {
 						user: user,
@@ -50,97 +53,65 @@ const registerUser =(req, res) => {
 					});
 				}
 				else {
-                    const newUser = new User({
-                        name: name,
-                        email: email,
-                        username: username,
-                        password: password
-                    })
-            
-                    createUser(newUser, (err, user) => {
-                        if(err) throw err
-                        console.log(user)
-                    })
-            
-                    req.flash('success_msg', 'You are registered and can now login')
-                    res.redirect('/users/login');
-            
-                    // res.status(200).json({
-                    //     msg: `${name} has successfully registered`
-                    // })
-                }
+					var newUser = new User({
+						name: name,
+						email: email,
+						username: username,
+						password: password
+					});
+					User.createUser(newUser, function (err, user) {
+						if (err) throw err;
+						console.log(user);
+					});
+         	req.flash('success_msg', 'You are registered and can now login');
+					res.redirect('/users/login');
+				}
 			});
 		});
 	}
-}
-
-// Function that logs in User
-const loginUser = (req, res) => {
-    res.redirect('/');    
-    // res.status(200).json({
-    //     msg: `${req.body.username} has successfully logged in`
-    // })
-  }
-
-// Function that logouts user
-const logoutUser = (req, res) => {
-    // req.logout()
-    req.logout();
-        // res.status(200).json({
-        //     msg: `Logged out successfully`
-        // })
-    req.flash('success_msg', 'You are logged out')
-    res.redirect('/users/login')
-}
-
-// Register
-router.get('/register', function (req, res) {
-	res.render('register');
 });
 
-// Login
-router.get('/login', function (req, res) {
-	res.render('login');
-});
-
-// Register User
-router.post('/register', registerUser)
-
-// LocalStrategy
 passport.use(new LocalStrategy(
-    (username, password, done) => {
-        getUserByUsername(username, (err, user) => {
-            if(err) throw err
-            if(!user) {
-                return done(null, false, { message: 'Unknown User' });
-            }
+	function (username, password, done) {
+		User.getUserByUsername(username, function (err, user) {
+			if (err) throw err;
+			if (!user) {
+				return done(null, false, { message: 'Unknown User' });
+			}
 
-            comparePassword(password, user.password, (err, isMatch) => {
-                if(err) throw err
-                if(isMatch) {
-                    return done(null, user)
-                } else {
-                    return done(null, false, {message: 'Invalid password'})
-                }
-            })
-        })
-    }
-  ))
+			User.comparePassword(password, user.password, function (err, isMatch) {
+				if (err) throw err;
+				if (isMatch) {
+					return done(null, user);
+				} else {
+					return done(null, false, { message: 'Invalid password' });
+				}
+			});
+		});
+	}));
 
-passport.serializeUser((user, done) => {
-    done(null, user.id)
-})
+passport.serializeUser(function (user, done) {
+	done(null, user.id);
+});
 
-passport.deserializeUser((id, done) => {
-    getUserById(id, (err, user) => {
-        done(err, user)
-    })
-})
+passport.deserializeUser(function (id, done) {
+	User.getUserById(id, function (err, user) {
+		done(err, user);
+	});
+});
 
-// Login User
-router.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }), loginUser)
+router.post('/login',
+	passport.authenticate('local', { successRedirect: '/', failureRedirect: '/users/login', failureFlash: true }),
+	function (req, res) {
+		res.redirect('/');
+	});
 
-// Logout User
-router.get('/logout', logoutUser)
+router.get('/logout', function (req, res) {
+	req.logout();
 
-module.exports = router
+	req.flash('success_msg', 'You are logged out');
+
+	res.redirect('/users/login');
+});
+
+module.exports = router;
