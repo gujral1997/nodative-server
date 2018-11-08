@@ -73,8 +73,13 @@ app.use(function (req, res, next) {
 
 
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/kinkyu/api/v1/', routes);
+
+app.use('/kinkyu/api/v1/', function (req, res, next) {
+  res.status(404).json({
+    info: `Cannot ${req.method}: '${req.path}`,
+  });
+});
 
 // Set Port
 app.set('port', (process.env.PORT || 3000));
