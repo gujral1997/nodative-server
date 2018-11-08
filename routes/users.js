@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
 
@@ -17,11 +17,11 @@ router.get('/login', function (req, res) {
 
 // Register User
 router.post('/register', function (req, res) {
-	var name = req.body.name;
-	var email = req.body.email;
-	var username = req.body.username;
-	var password = req.body.password;
-	var password2 = req.body.password2;
+	const name = req.body.name;
+	const email = req.body.email;
+	const username = req.body.username;
+	const password = req.body.password;
+	const password2 = req.body.password2;
 
 	// Validation
 	req.checkBody('name', 'Name is required').notEmpty();
@@ -31,7 +31,7 @@ router.post('/register', function (req, res) {
 	req.checkBody('password', 'Password is required').notEmpty();
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
-	var errors = req.validationErrors();
+	const errors = req.validationErrors();
 
 	if (errors) {
 		res.render('register', {
