@@ -87,9 +87,14 @@ const logoutUser = (req, res) => {
 }
 
 // Register
-router.get('/register', (req, res)=>{
-    res.status(404).json({error: 'error'})
-})
+router.get('/register', function (req, res) {
+	res.render('register');
+});
+
+// Login
+router.get('/login', function (req, res) {
+	res.render('login');
+});
 
 // Register User
 router.post('/register', registerUser)

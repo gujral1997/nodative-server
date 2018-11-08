@@ -86,13 +86,13 @@ app.get('*', function (req, res) {
     res.render('index');
   });
 
-app.use('/nodative/api/v1/', routes)
+app.use('/', routes)
 
-app.use('/nodative/api/v1/', (req, res, next) => {
-    res.status(404).json({
-      info: `Cannot ${req.method}: '${req.path}`,
-    })
-  })
+// app.use('/', (req, res, next) => {
+//     res.status(404).json({
+//       info: `Cannot ${req.method}: '${req.path}`,
+//     })
+//   })
 
 // Set Port
 app.set('port', (process.env.PORT || 3000))
