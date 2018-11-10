@@ -1,0 +1,96 @@
+{
+  "id": "d98f434d-8327-4389-b1fe-f9d4432ef486",
+  "name": "Nodative APIs",
+  "description": "API's for havkathons",
+  "auth": null,
+  "events": null,
+  "variables": [],
+  "order": [
+    "e8c70642-1268-4499-8e3b-5df55693770e",
+    "55627166-4bee-4595-802d-c4802b3e540d",
+    "b5653cd9-e6a8-4e1b-b80d-36b44bf3954a"
+  ],
+  "folders_order": [],
+  "folders": [],
+  "requests": [
+    {
+      "id": "55627166-4bee-4595-802d-c4802b3e540d",
+      "name": "Logout",
+      "url": "localhost:3000/nodative/api/v1/users/logout",
+      "description": "",
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [],
+      "folder": null,
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "d98f434d-8327-4389-b1fe-f9d4432ef486",
+      "rawModeData": "",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "b5653cd9-e6a8-4e1b-b80d-36b44bf3954a",
+      "name": "Register",
+      "url": "localhost:3000/nodative/api/v1/users/register",
+      "description": "",
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [],
+      "folder": null,
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "d98f434d-8327-4389-b1fe-f9d4432ef486",
+      "rawModeData": "{\n\t\"username\": \"username\",\n\t\"email\": \"email@email.com\",\n\t\"name\": \"name\",\n\t\"password\": \"password\",\n\t\"password2\": \"password\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "e8c70642-1268-4499-8e3b-5df55693770e",
+      "name": "Login",
+      "url": "localhost:3000/nodative/api/v1/users/login",
+      "description": "",
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "description": ""
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [],
+      "folder": null,
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "d98f434d-8327-4389-b1fe-f9d4432ef486",
+      "rawModeData": "{\n    \t\t\"username\": \"naaaash\",\n    \t\t\"password\": \"123\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    }
+  ]
+}

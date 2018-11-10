@@ -46,8 +46,7 @@ router.post('/register', function (req, res) {
 		}}, function (err, mail) {
 				if (user || mail) {
 					res.json({
-						user: user,
-						mail: mail
+						user: user
 					})
 				}
 				else {
