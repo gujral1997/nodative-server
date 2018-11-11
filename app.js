@@ -14,6 +14,7 @@ const cors = require('cors')
 mongoose.connect('mongodb://granative:granative1234@ds251223.mlab.com:51223/granative')
 
 const routes = require('./routes/index')
+
 // const users = require('./routes/users');
 
 // Init App
